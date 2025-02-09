@@ -49,7 +49,7 @@ export class Database {
     const rowIndex = this.#database[table].findIndex(row => row.id === id);
 
     if (rowIndex > -1) {
-      this.#database[table][rowIndex] = { id, ...data };
+      this.#database[table][rowIndex] = { ...this.#database[table][rowIndex],  ...data};
       this.#persist();
     }
   }
@@ -60,6 +60,16 @@ export class Database {
     if (rowIndex > -1) {
       this.#database[table].splice(rowIndex, 1);
       this.#persist();
+    }
+  }
+
+  selectById(table, id) {
+    const rowIndex = this.#database[table].findIndex(row => row.id === id);
+
+    if (rowIndex > -1) {
+      return 1;
+    } else {
+      return 0;
     }
   }
 }

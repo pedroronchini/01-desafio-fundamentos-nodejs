@@ -43,7 +43,7 @@ export const routes = [
   
         return res.writeHead(201).end();
       } else {
-        return res.writeHead(400).end(JSON.stringify({message: 'É preciso informar o title e description'}));
+        return res.writeHead(400).end(JSON.stringify({message: 'It is necessary to provide the title and description.'}));
       }
     } 
   },
@@ -55,6 +55,12 @@ export const routes = [
       const { id } = req.params;
       const { title, description } = req.body;
 
+      const hasTask = database.selectById('tasks', id);
+
+      if (hasTask === 0) {
+        return res.writeHead(400).end(JSON.stringify({message: 'Task not found'}));
+      }
+
       const date = dateNow();
 
       if (title && !description) {
@@ -62,19 +68,25 @@ export const routes = [
           title,
           updated_at: date
         });
+
+        return res.writeHead(204).end();
       } else if (!title && description) {
         database.update('tasks', id, {
           description,
           updated_at: date
         });
+
+        return res.writeHead(204).end();
       } else if(title && description) {
         database.update('tasks', id, {
           title,
           description,
           updated_at: date
         });
+
+        return res.writeHead(204).end();
       } else {
-        return res.writeHead(400).end(JSON.stringify({message: 'É preciso informar o title e description'}));
+        return res.writeHead(400).end(JSON.stringify({message: 'It is necessary to provide the title and description.'}));
       }
     }
   }
